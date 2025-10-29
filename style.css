@@ -1,0 +1,178 @@
+* {
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+    font-family: 'Times New Roman', Times, serif;
+    letter-spacing: 0.1em;
+}
+body {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: #f2f2f2;
+}
+header {
+    position: sticky;
+    top: 0;
+    font-size: 27px;
+    padding: 0 10vw;
+    padding-bottom: 0;
+    display: flex;
+    justify-content: space-between;
+}
+.headerButtons {
+    display: flex;
+    gap: 5%;
+}
+.headerButtons a {
+    padding: 5px 10px;
+    color: #2c2c2c;
+    border-radius: 5px;
+    transition: background 0.7s, color 0.3s;
+}
+.headerButtons a:hover {
+    background: #6200ea;
+    color: #fff;
+}
+header,
+footer * {
+    font-family: cursive;
+    letter-spacing: 0.2em;
+}
+footer {
+    bottom: 0;
+    font-size: 17px;
+    padding-right: 10vw;
+
+    align-self: flex-end;
+}
+main {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.accordion {
+    width: 400px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+.accordion-item {
+    border-bottom: 1px solid #ddd;
+}
+.accordion-header {
+    background: #6200ea;
+    color: #fff;
+    padding: 12px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+    transition: background 0.3s;
+}
+.accordion-header:hover {
+    background: #4b00b5;
+}
+.accordion-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    padding: 0 12px;
+    background: #fafafa;
+}
+.accordion-item[data-open='true'] .accordion-content {
+    padding: 20px;
+}
+.accordion-content.open {
+    padding: 12px;
+}
+.accordion-content ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.accordion-content li {
+    padding: 6px 0;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+.accordion-content button {
+    flex-grow: 3;
+    padding: 5px;
+    text-align: right;
+}
+
+.accordion-content input[type='chekbox'] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+.accordion-content input[type='checkbox']:checked + span {
+    text-decoration: line-through;
+    color: #999;
+}
+.count {
+    color: rgb(243, 148, 5);
+}
+.new-task-input {
+    border: 1px solid lightgreen;
+    border-radius: 15px;
+    font-size: 17px;
+    padding: 3px;
+    letter-spacing: 0.2rem;
+    color: #4b00b5;
+    text-align: center;
+}
+.add-task-btn {
+    border-radius: 15px;
+}
+.minusSpan {
+    display: none;
+}
+.delete-btn {
+    background-color: inherit;
+    border: none;
+    color: red;
+    font-size: 16px;
+    cursor: pointer;
+    right: -10px;
+    transition: transform 0.3s ease;
+}
+.delete-btn:hover {
+    color: darkred;
+}
+@media (max-width: 600px) {
+    header {
+        padding-left: 3vw;
+    }
+    footer {
+        padding-right: 2vw;
+        font-size: 15px;
+    }
+    .accordion {
+        width: 95vw;
+    }
+    .accordion-header {
+        font-size: 20px;
+        padding: 10px;
+    }
+    .accordion-content li {
+        font-size: 18px;
+    }
+}
+@media (min-width: 601px) {
+    .accordion {
+        width: 80%;
+    }
+    .accordion-header {
+        font-size: 20px;
+        padding: 12px;
+    }
+}
