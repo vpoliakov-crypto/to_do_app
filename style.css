@@ -3,7 +3,7 @@
     padding: 0;
     text-decoration: none;
     font-family: 'Times New Roman', Times, serif;
-    letter-spacing: 0.1em;
+    box-sizing: border-box;
 }
 body {
     height: 100vh;
@@ -35,9 +35,9 @@ header {
     color: #fff;
 }
 header,
-footer * {
+footer {
     font-family: cursive;
-    letter-spacing: 0.2em;
+    letter-spacing: 0.2rem;
 }
 footer {
     bottom: 0;
@@ -54,7 +54,7 @@ main {
 }
 
 .accordion {
-    width: 400px;
+    /* width: 400px; */
     background: #fff;
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -96,25 +96,19 @@ main {
     margin: 0;
 }
 .accordion-content li {
-    padding: 6px 0;
     border-bottom: 1px solid #eee;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 10px;
+    font-size: 23px;
 }
-.accordion-content button {
-    flex-grow: 3;
-    padding: 5px;
-    text-align: right;
-}
-
-.accordion-content input[type='chekbox'] {
+.task-content input[type='checkbox'] {
     width: 18px;
     height: 18px;
     cursor: pointer;
+    margin: 0 15px;
 }
-.accordion-content input[type='checkbox']:checked + span {
+.task-content input[type='checkbox']:checked + span {
     text-decoration: line-through;
     color: #999;
 }
@@ -122,19 +116,27 @@ main {
     color: rgb(243, 148, 5);
 }
 .new-task-input {
-    border: 1px solid lightgreen;
+    border: 1px solid rgb(4, 92, 4);
     border-radius: 15px;
-    font-size: 17px;
-    padding: 3px;
+    font-size: 25px;
+    padding: 10px;
     letter-spacing: 0.2rem;
     color: #4b00b5;
     text-align: center;
 }
 .add-task-btn {
     border-radius: 15px;
+    font-size: 23px;
+    padding: 10px;
+    margin: 15px;
 }
 .minusSpan {
     display: none;
+}
+.task-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 .delete-btn {
     background-color: inherit;
@@ -142,11 +144,23 @@ main {
     color: red;
     font-size: 16px;
     cursor: pointer;
+    padding: 5px;
+    text-align: right;
     right: -10px;
     transition: transform 0.3s ease;
 }
 .delete-btn:hover {
     color: darkred;
+}
+.task {
+    transition: all 0.3s ease;
+    letter-spacing: 0.2rem;
+}
+
+.task:hover {
+    transition: all 0.4s ease-in-out;
+    background-color: #f0f0f0;
+    transform: translateX(5px);
 }
 @media (max-width: 600px) {
     header {
@@ -169,10 +183,31 @@ main {
 }
 @media (min-width: 601px) {
     .accordion {
-        width: 80%;
+        width: 90%;
     }
     .accordion-header {
         font-size: 20px;
         padding: 12px;
     }
+}
+
+.task {
+    animation: fadeInUp 0.4s ease;
+}
+.removing {
+    animation: fadeOut 0.3s ease forwards;
+}
+
+@keyframes appear {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+li.appearing {
+    animation: appear 0.3s ease-in-out;
 }

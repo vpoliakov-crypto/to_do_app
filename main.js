@@ -37,6 +37,10 @@ document.querySelectorAll('.accordion-item').forEach((item) => {
 
     const createTask = (text, done = false) => {
         const li = document.createElement('li');
+        li.classList.add('task');
+
+        const taskContent = document.createElement('div');
+        taskContent.classList.add('task-content');
 
         const checkbox = document.createElement('input');
         checkbox.type = 'checkbox';
@@ -45,15 +49,18 @@ document.querySelectorAll('.accordion-item').forEach((item) => {
         const span = document.createElement('span');
         span.textContent = text;
 
+        taskContent.appendChild(checkbox);
+        taskContent.appendChild(span);
+
         const deleteBtn = document.createElement('button');
         deleteBtn.textContent = '✕';
         deleteBtn.classList.add('delete-btn');
 
-        li.appendChild(checkbox);
-        li.appendChild(span);
+        li.appendChild(taskContent);
         li.appendChild(deleteBtn);
 
         ul.appendChild(li);
+        li.classList.add('appearing');
 
         updateCount();
         saveTasks();
@@ -70,9 +77,17 @@ document.querySelectorAll('.accordion-item').forEach((item) => {
             saveTasks();
         }
         if (e.target.classList.contains('delete-btn')) {
-            li.remove();
-            updateCount();
-            saveTasks();
+            li.classList.remove('appearing');
+            li.classList.add('removing');
+            li.addEventListener(
+                'animationend',
+                () => {
+                    li.remove();
+                    updateCount();
+                    saveTasks();
+                },
+                { once: true }
+            );
         }
     });
 
