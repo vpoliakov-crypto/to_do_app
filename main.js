@@ -1,119 +1,116 @@
-document.querySelectorAll('.accordion-item').forEach((item) => {
-    const header = item.querySelector('.accordion-header');
-    const content = item.querySelector('.accordion-content');
-    const ul = content.querySelector('ul');
-    const input = content.querySelector('.new-task-input');
-    const addButton = content.querySelector('.add-task-btn');
-    const countSpan = header.querySelector('.count');
-    const storageKey = `tasks -${item.dataset.id}`;
+import { toggleAccordion } from './accordion.js';
+import { updateCount } from './count.js';
 
-    const updateCount = () => {
-        const unfinished = ul.querySelectorAll('li input:not(:checked)').length;
-        countSpan.textContent = `(${unfinished})`;
-    };
+document.addEventListener('DOMContentLoaded', () => {
+    toggleAccordion();
 
-    function saveTasks() {
-        const tasks = [];
+    document.querySelectorAll('.accordion-item').forEach((item) => {
+        const header = item.querySelector('.accordion-header');
+        const content = item.querySelector('.accordion-content');
+        const ul = content.querySelector('ul');
+        const input = content.querySelector('.new-task-input');
+        const addButton = content.querySelector('.add-task-btn');
+        const countSpan = header.querySelector('.count');
+        const storageKey = `tasks -${item.dataset.id}`;
 
-        ul.querySelectorAll('li').forEach((li) => {
-            const checkbox = li.querySelector('input[type="checkbox"]');
-            const text = li.querySelector('span').textContent;
+        function saveTasks() {
+            const tasks = [];
 
-            tasks.push({
-                text,
-                done: checkbox.checked,
+            ul.querySelectorAll('li').forEach((li) => {
+                const checkbox = li.querySelector('input[type="checkbox"]');
+                const text = li.querySelector('span').textContent;
+
+                tasks.push({
+                    text,
+                    done: checkbox.checked,
+                });
             });
-        });
 
-        localStorage.setItem(storageKey, JSON.stringify(tasks));
-    }
+            localStorage.setItem(storageKey, JSON.stringify(tasks));
+        }
 
-    const loadTasks = () => {
-        const savedTasks = JSON.parse(localStorage.getItem(storageKey)) || [];
-        savedTasks.forEach((task) => {
-            createTask(task.text, task.done);
-        });
-    };
+        const loadTasks = () => {
+            const savedTasks =
+                JSON.parse(localStorage.getItem(storageKey)) || [];
+            savedTasks.forEach((task) => {
+                createTask(task.text, task.done);
+            });
+        };
 
-    const createTask = (text, done = false) => {
-        const li = document.createElement('li');
-        li.classList.add('task');
+        const createTask = (text, done = false) => {
+            const li = document.createElement('li');
+            li.classList.add('task');
 
-        const taskContent = document.createElement('div');
-        taskContent.classList.add('task-content');
+            const taskContent = document.createElement('div');
+            taskContent.classList.add('task-content');
 
-        const checkbox = document.createElement('input');
-        checkbox.type = 'checkbox';
-        checkbox.checked = done;
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.checked = done;
 
-        const span = document.createElement('span');
-        span.textContent = text;
+            const span = document.createElement('span');
+            span.textContent = text;
 
-        taskContent.appendChild(checkbox);
-        taskContent.appendChild(span);
+            taskContent.appendChild(checkbox);
+            taskContent.appendChild(span);
 
-        const deleteBtn = document.createElement('button');
-        deleteBtn.textContent = '✕';
-        deleteBtn.classList.add('delete-btn');
+            const deleteBtn = document.createElement('button');
+            deleteBtn.textContent = '✕';
+            deleteBtn.classList.add('delete-btn');
 
-        li.appendChild(taskContent);
-        li.appendChild(deleteBtn);
+            li.appendChild(taskContent);
+            li.appendChild(deleteBtn);
 
-        ul.appendChild(li);
-        li.classList.add('appearing');
+            ul.appendChild(li);
+            li.classList.add('appearing');
 
-        updateCount();
-        saveTasks();
-    };
-
-    loadTasks();
-
-    ul.addEventListener('click', (e) => {
-        const li = e.target.closest('li');
-        if (!li) return;
-
-        if (e.target.tagName === 'INPUT' && e.target.type === 'checkbox') {
-            updateCount();
+            updateCount(ul, countSpan);
             saveTasks();
-        }
-        if (e.target.classList.contains('delete-btn')) {
-            li.classList.remove('appearing');
-            li.classList.add('removing');
-            li.addEventListener(
-                'animationend',
-                () => {
-                    li.remove();
-                    updateCount();
-                    saveTasks();
-                },
-                { once: true }
-            );
-        }
-    });
+        };
 
-    addButton.addEventListener('click', () => {
-        const taskText = input.value.trim();
-        if (!taskText) return;
+        loadTasks();
 
-        createTask(taskText);
-        input.value = '';
-    });
+        const addTaskByEnter = () => {
+            const taskText = input.value.trim();
+            if (!taskText) return;
+            createTask(taskText);
+            input.value = '';
 
-    header.addEventListener('click', () => {
-        const isOpen = item.dataset.open === 'true';
-        document.querySelectorAll('.accordion-item').forEach((i) => {
-            i.dataset.open = 'false';
-            i.querySelector('.accordion-content').style.maxHeight = null;
+            content.style.maxHeight = content.scrollHeight + 'px';
+        };
+
+        ul.addEventListener('click', (e) => {
+            const li = e.target.closest('li');
+            if (!li) return;
+
+            if (e.target.tagName === 'INPUT' && e.target.type === 'checkbox') {
+                updateCount(ul, countSpan);
+                saveTasks();
+            }
+            if (e.target.classList.contains('delete-btn')) {
+                li.classList.remove('appearing');
+                li.classList.add('removing');
+                li.addEventListener(
+                    'animationend',
+                    () => {
+                        li.remove();
+                        updateCount(ul, countSpan);
+                        saveTasks();
+                    },
+                    { once: true }
+                );
+            }
         });
 
-        if (!isOpen) item.dataset.open = 'true';
+        addButton.addEventListener('click', addTaskByEnter);
 
-        if (item.dataset.open === 'true') {
-            setTimeout(() => {
-                content.style.maxHeight = content.scrollHeight + 'px';
-            }, 0);
-        }
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                addTaskByEnter();
+            }
+        });
+
+        updateCount(ul, countSpan);
     });
-
-    updateCount();
 });

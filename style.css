@@ -101,6 +101,7 @@ main {
     align-items: center;
     justify-content: space-between;
     font-size: 23px;
+    margin-top: 12px;
 }
 .task-content input[type='checkbox'] {
     width: 18px;
@@ -123,6 +124,9 @@ main {
     letter-spacing: 0.2rem;
     color: #4b00b5;
     text-align: center;
+}
+.new-task-input::selection {
+    color: 0;
 }
 .add-task-btn {
     border-radius: 15px;
@@ -193,6 +197,17 @@ main {
 
 .task {
     animation: fadeInUp 0.4s ease;
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+        transform: scale(1);
+    }
+    to {
+        opacity: 0;
+        transform: scale(0.9);
+    }
 }
 .removing {
     animation: fadeOut 0.3s ease forwards;
