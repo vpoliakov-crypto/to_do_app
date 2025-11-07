@@ -11,7 +11,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const input = content.querySelector('.new-task-input');
         const addButton = content.querySelector('.add-task-btn');
         const countSpan = header.querySelector('.count');
-        const storageKey = `tasks -${item.dataset.id}`;
+        const storageKey = `tasks-${item.dataset.id}`;
+        const sortDateBtn = item.querySelector('.sort-date-btn');
+        const sortAlphaBtn = item.querySelector('.sort-alpha-btn');
 
         function saveTasks() {
             const tasks = [];
@@ -19,10 +21,12 @@ document.addEventListener('DOMContentLoaded', () => {
             ul.querySelectorAll('li').forEach((li) => {
                 const checkbox = li.querySelector('input[type="checkbox"]');
                 const text = li.querySelector('span').textContent;
+                const createdAt = li.dataset.createdAt || Date.now();
 
                 tasks.push({
                     text,
                     done: checkbox.checked,
+                    createdAt: Number(createdAt),
                 });
             });
 
@@ -33,13 +37,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const savedTasks =
                 JSON.parse(localStorage.getItem(storageKey)) || [];
             savedTasks.forEach((task) => {
-                createTask(task.text, task.done);
+                createTask(task.text, task.done, task.createdAt);
             });
         };
 
-        const createTask = (text, done = false) => {
+        const createTask = (text, done = false, createdAt = Date.now()) => {
             const li = document.createElement('li');
             li.classList.add('task');
+            li.dataset.createdAt = createdAt;
 
             const taskContent = document.createElement('div');
             taskContent.classList.add('task-content');
@@ -78,6 +83,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
             content.style.maxHeight = content.scrollHeight + 'px';
         };
+
+        const sortByDate = () => {
+            const tasks = JSON.parse(localStorage.getItem(storageKey)) || [];
+            tasks.sort((a, b) => a.createdAt - b.createdAt);
+            localStorage.setItem(storageKey, JSON.stringify(tasks));
+            ul.innerHTML = '';
+            tasks.forEach((t) => {
+                createTask(t.text, t.done, t.createdAt);
+            });
+        };
+
+        const sortByAlpha = () => {
+            const tasks = JSON.parse(localStorage.getItem(storageKey)) || [];
+            tasks.sort((a, b) => a.text.localeCompare(b.text));
+            localStorage.setItem(storageKey, JSON.stringify(tasks));
+            ul.innerHTML = '';
+            tasks.forEach((t) => {
+                createTask(t.text, t.done, t.createdAt);
+            });
+        };
+
+        sortDateBtn.addEventListener('click', sortByDate);
+        sortAlphaBtn.addEventListener('click', sortByAlpha);
 
         ul.addEventListener('click', (e) => {
             const li = e.target.closest('li');

@@ -166,6 +166,10 @@ main {
     background-color: #f0f0f0;
     transform: translateX(5px);
 }
+.completed {
+    text-decoration: line-through;
+    color: gray;
+}
 @media (max-width: 600px) {
     header {
         padding-left: 3vw;
